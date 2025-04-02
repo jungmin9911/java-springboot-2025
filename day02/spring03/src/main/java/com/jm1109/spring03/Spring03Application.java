@@ -2,7 +2,7 @@ package com.jm1109.spring03;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import com.jm1109.spring03.Car;		// 같은 패키지 내의 클래스는 import 생략 가능
+// import com.jm1109.spring03.Car;		// 같은 패키지 내의 클래스는 import 생략 가능
 
 @SpringBootApplication
 public class Spring03Application {
@@ -31,6 +31,9 @@ public class Spring03Application {
 		mycar.printCarName("테슬라", "벤츠", "베엠베", "페라리");	// 가변인자 메서드 호출
 		
 		Car.printYear();	// 클래스 인스턴스 생성없이 바로 사용가능
+
+		int term = mycar.calcYear(term + "년 동안 사용");
+		System.out.println(term + "년 동안 사용");
 	}
 
 	public void printHello() {

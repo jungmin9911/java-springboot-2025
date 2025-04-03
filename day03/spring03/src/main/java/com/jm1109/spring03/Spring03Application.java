@@ -8,6 +8,7 @@ public class Spring03Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Spring03Application.class, args);
+		// pom.xml 수정
 	}
 
 }

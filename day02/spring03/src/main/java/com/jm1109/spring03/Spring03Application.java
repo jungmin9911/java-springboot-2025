@@ -32,7 +32,7 @@ public class Spring03Application {
 		
 		Car.printYear();	// 클래스 인스턴스 생성없이 바로 사용가능
 
-		int term = mycar.calcYear(term + "년 동안 사용");
+		int term = mycar.calcYear(2025);
 		System.out.println(term + "년 동안 사용");
 	}
 

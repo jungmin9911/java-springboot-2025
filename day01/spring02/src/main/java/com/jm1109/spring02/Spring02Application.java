@@ -21,7 +21,7 @@ public class Spring02Application {
 		System.out.println("입력 아이디 --> " + userid);
 		System.out.println("입력 비밀번호 --> " + passwd);
 
-		if (userid == "jm1109" && passwd.equals("12345")) {
+		if (userid.equals("jm1109") && passwd.equals("12345")) {
 			System.out.println("로그인 성공");
 		} else {
 			System.out.println("로그인 실패 아이디 또는 비밀번호 오류");

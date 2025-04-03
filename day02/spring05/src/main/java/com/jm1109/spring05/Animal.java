@@ -1,6 +1,6 @@
 package com.jm1109.spring05;
 
-import java.lang.Object;    // Object는 자바의 최상위 클래스 !! 모든 클래스는 Object를 상속받음
+// import java.lang.Object;    // Object는 자바의 최상위 클래스 !! 모든 클래스는 Object를 상속받음
 // 부모클래스 동물
 public class Animal {
     // String name; // public 등 쓰지 않으면 default로 설정됨. 같은 패키지에서만 사용 가능 !!

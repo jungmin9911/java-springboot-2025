@@ -122,7 +122,7 @@ Java 개발자 과정 SpringBoot 리포지터리
 
 - Maven
     1. Java 프로젝트 기본 빌드도구
-    2. Maven Repository (https://mvnrepository.com/) 검색가능 > ojdbc11도 검색 후 버전에 맞게 설치
+    2. Maven Repository [여기서](https://mvnrepository.com/) 검색가능 > ojdbc11도 검색 후 버전에 맞게 설치
     3. 빌드, 패키징(jar/war 파일 생성), 테스트 등을 한번의 명령으로 간편하게 처리
     4. 가장 큰 특징이 외부 라이브러리 자동으로 다운로드, 관리
     5. pom.xml(Project Object Model) 파일로 빌드 설정을 관리
@@ -138,7 +138,7 @@ Java 개발자 과정 SpringBoot 리포지터리
 
 ### Gradle 설정
 - Gradle로 프로젝트가 제대로 동작하지 않으면
-    - (https://gradle.org/) 에서 Gradle 다운로드
+    - [여기](https://gradle.org/) 에서 Gradle 다운로드
     - 설치 경로 확인, 설치
     - 시스템 등록정보 PATH 지정. GRADEL_HOME 사용
 
@@ -152,7 +152,28 @@ Java 개발자 과정 SpringBoot 리포지터리
 
 ## 4일차
 - 기초문법 마무리
-- Spring Boot 시작
+    - [JAVA기초문법](./JAVA_BASIC.md)
+    - 제네릭, 컬렉션 프레임워크, 입출력, 람다식, 스트림API
+
+- Gradle 오류 해결방법
+    - [Gradle](https://gradle.org/install/)
+    - C:\Gradle 위치에 압축해제
+    - sysdm.cpl 환경변수 GRADLE_HOME 경로 입력, 확인(JAVA_HOME과 동일)
+
+    <img src="./image/sb005.png" width="600">
+
+    - VS Code 설정
+    
+    <img src="./image/sb003.png" width="700">
+
+    - Gradle Build Server : Enabled 기본 on -> off
+
+    <img src="./image/sb004.png" width="700">
+
+    - Gradle Home -> 환경변수 입력한 GRADLE_HOME의 경로 입력
+    - Gradle Java Home -> 환경변수 JAVA_HOME의 경로 입력
+
+    - VS Code 재시작
 
 ## 5일차
 

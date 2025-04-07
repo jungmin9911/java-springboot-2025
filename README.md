@@ -223,6 +223,7 @@ Java 개발자 과정 SpringBoot 리포지터리
     - 각 기능별로 패키지를 구분
         - Controller, Model, 등...
 
+### 로그출력
 - log-back
     - 스프링부트에 내장된 로그 모듈
 
@@ -248,5 +249,37 @@ Java 개발자 과정 SpringBoot 리포지터리
     logger.warn("경고표시를 나타내는 로그입니다");
     logger.error("에러표시를 나타내는 로그입니다");
     ```
+
+### 스프링부트 배너(중요도 없음)
+- resources 폴더에 banner.txt 생성
+- 내용 추가
+- [Spring Boot Banner Generator](https://devops.datenkollektiv.de/banner.txt/index.html)
+- 베너제너레이터로 생성한 글자 복사 banner.txt에 붙여넣기
+- 서버 재시작
+
+<img src="./image/sb007.png" width="700">
+
+### 메인페이지 추가
+- resources/static/index.html 부터 시작
+
+### 스트링부트 프로젝트 구조
+
+<img src="./image/sb008.png" width="300">
+
+- 각 폴더 구조
+    - .gradle ~ gradle : 그레이들, VSCode, 빌드 등에 필요한 폴더(설명필요X)
+    - `src/main/java` : 패키지와 자바 소스가 저장되는 위치
+    - com.jung1109.spring03 : 패키지. 폴더로 구성
+        - HelloController 클래스에 접근하려면
+        - com.jm1109.spring03.controller.HelloController 접근해야 함
+    - Spring03Applocation.java : 시작프로그램
+    - src/main/resources : 자바파일 이외 HTML, CSS, JS, 환경파일 등 리소스파일이 저장되는 위치
+        - `static` : CSS, JS, 이미지파일 저장되는 공간
+        - `templates` : 스프링부트와 연계되는 HTML 파일이 저장되는 곳
+        - `application.properties` : 프로젝트 환경설정 파일. 환경변수, DB 설정
+    - src/test/java : jUbit 스프링부트 테스트도구 자바파링 저장되는 위치
+    - `build.gradle` : 그레이들 환경 파일. Groovy 기반으로 한 빌드도구. dependencies만 잘 구성하면 됨
+    - gradlew.bat : 중간에 직접 그레이들 빌드를 할 때 사용하는 배치파일
+    - setting.gradle : 고급 그레이들 설정. 손댈일 없음
 
 ## 6일차(06-26)

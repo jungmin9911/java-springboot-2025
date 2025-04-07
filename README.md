@@ -85,6 +85,9 @@ Java 개발자 과정 SpringBoot 리포지터리
         - Gradle for Java 설치
 
 ### Spring Boot 기본 실행(Java 프로젝트)
+- JDK 버전과 Spring Boot Initializr에 선택하는 JDK 버전이 일치히야함
+    - OS에 JDK 버전이 17버전이면 17 선택
+
 - VS Code에서 명령팔레트 실행
     - Spring Initializr : Create a Maven Project
     - Specify Spring Boot version : 3.3.10 선택
@@ -176,5 +179,74 @@ Java 개발자 과정 SpringBoot 리포지터리
     - VS Code 재시작
 
 ## 5일차
+- Spring Boot 웹실행
+    - Spring Initializr : Create a Gradle Project
+    - Specify Spring Boot version : 3.4.4 선택
+    - Specify project language : Java
+    - Input Group ID : 본인 아이디 입력 (jm1109)
+    - Input Artifact ID : spring03
+    - Specify packaging type : Jar(Java archive, 압축파일)
+    - Specify Java version : 17
+    - Choose dependencied : Selected 1 dependencies
+        - Spring Web
+    - 저장위치 선택
+    - **새 창 열기** - Spring Boot 프로젝트가 루트폴더가 된 개발환경
+
+- 기본설정
+    - application.properties에 `spring.output.ansi.enabled=always` 추가
+
+- 포트번호
+    |프로토콜|포트번호|비고
+    |:---|---:|:---|
+    |HTTP|80|웹 서버, 서비스포트(보안취약)|
+    |HTTPS|443|SSL를 적용한 웹 서비스(보안강화)|
+    |FTP|21|웹을 통한 파일전송|
+    |SSH|22|보안강화된 텔넷|
+    |TELNET|23|원격서버접속 서비스|
+    |SMTP|25|메일 전송서비스|
+
+- 개발용 포트
+    - 포트는 중복안됨
+    - 8080포트를 사용하고 있으면 다른 포트로 변경해야 함
+    - 포트 변경시 application.properties에 `server.port=8090` 추가
+
+- 웹브라우저 열기
+    - http://localhost:8090/ 오픈
+
+    <img src="./image/sb006.png" width="700">
+
+- 접속위치 요청 처리
+    - 컨트롤러 생성
+        - HelloController 클래스 생성 (spring03 우클릭 > New Java File > Class)
+        - http://localhost:8090/hello
+
+    - 각 기능별로 패키지를 구분
+        - Controller, Model, 등...
+
+- log-back
+    - 스프링부트에 내장된 로그 모듈
+
+    - application.properties 내 로그성정
+
+    ```groovy
+    logging.level.root = info
+    logginf.file.name = /logtest.log
+    ```
+
+    - 사용시
+
+    ```java
+    // 클래스 내에 작성
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    // 메서드 내에 작성
+    logger.info("hello URL 오픈");
+    // 문제 발생시 로그를 남길떄
+    logger.debug("디버그시 필요한 로그입니다");
+    logger.trace("디버그시 필요한 로그예요");
+
+    logger.warn("경고표시를 나타내는 로그입니다");
+    logger.error("에러표시를 나타내는 로그입니다");
+    ```
 
 ## 6일차(06-26)

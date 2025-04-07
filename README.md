@@ -282,4 +282,22 @@ Java 개발자 과정 SpringBoot 리포지터리
     - gradlew.bat : 중간에 직접 그레이들 빌드를 할 때 사용하는 배치파일
     - setting.gradle : 고급 그레이들 설정. 손댈일 없음
 
+### 스프링부트 어노테이션
+
+#### @SpringBootApplication
+- 스프링부트 자동구성 매커니즘 활성화
+- 어플리케이션 내 패키지에서 컴포넌트들 스캐닝
+- 설정 클래스 임포트해서 활성화, 스프링부트 실행
+
+#### @Controller
+- 컴포넌트 구체화해서 해당클래스 IoC컨테이너 Bean으로 등록
+
+#### @GetMapping
+- Get, Post 중 Get(url)으로 들어오는 주소를 매핑해서 처리해주는 역할
+- @PostMapping, @RequestMapping등 파악
+
+#### @ResponseBody
+- HTTP 요청의 자바객체가 처리한 body내용을 매핑하는 역할
+- 자바의 String 문자열을 웹페이지에 렌더링
+
 ## 6일차(06-26)

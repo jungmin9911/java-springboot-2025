@@ -15,6 +15,7 @@ public class HelloController {
     // 'hello'라는 길(Path)로 들어오면 아래 메소드를 실행하라
     @ResponseBody
     public String helloSpring() {   // 길(Path)을 만들어주기 전까지 사용 불가
+
         logger.info("hello URL 오픈");
         // 문제 발생시 로그를 남길떄
         logger.debug("디버그시 필요한 로그입니다");

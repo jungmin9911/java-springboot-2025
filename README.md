@@ -123,6 +123,8 @@ Java 개발자 과정 SpringBoot 리포지터리
 - Maven
     1. Java 프로젝트 기본 빌드도구
     2. Maven Repository (https://mvnrepository.com/) 검색가능 > ojdbc11도 검색 후 버전에 맞게 설치
+        - spring-boot-starter-log4j2 버전 : 3.3.10
+        - ojdbc 버전 : 23.3.0.23.09
     3. 빌드, 패키징(jar/war 파일 생성), 테스트 등을 한번의 명령으로 간편하게 처리
     4. 가장 큰 특징이 외부 라이브러리 자동으로 다운로드, 관리
     5. pom.xml(Project Object Model) 파일로 빌드 설정을 관리

@@ -85,6 +85,9 @@ Java 개발자 과정 SpringBoot 리포지터리
         - Gradle for Java 설치
 
 ### Spring Boot 기본 실행(Java 프로젝트)
+- JDK 버전과 Spring Boot Initializr에 선택하는 JDK 버전이 일치히야함
+    - OS에 JDK 버전이 17버전이면 17 선택
+
 - VS Code에서 명령팔레트 실행
     - Spring Initializr : Create a Maven Project
     - Specify Spring Boot version : 3.3.10 선택
@@ -122,7 +125,7 @@ Java 개발자 과정 SpringBoot 리포지터리
 
 - Maven
     1. Java 프로젝트 기본 빌드도구
-    2. Maven Repository (https://mvnrepository.com/) 검색가능 > ojdbc11도 검색 후 버전에 맞게 설치
+    2. Maven Repository [여기서](https://mvnrepository.com/) 검색가능 > ojdbc11도 검색 후 버전에 맞게 설치
         - spring-boot-starter-log4j2 버전 : 3.3.10
         - ojdbc 버전 : 23.3.0.23.09
     3. 빌드, 패키징(jar/war 파일 생성), 테스트 등을 한번의 명령으로 간편하게 처리
@@ -140,7 +143,7 @@ Java 개발자 과정 SpringBoot 리포지터리
 
 ### Gradle 설정
 - Gradle로 프로젝트가 제대로 동작하지 않으면
-    - (https://gradle.org/) 에서 Gradle 다운로드
+    - [여기](https://gradle.org/) 에서 Gradle 다운로드
     - 설치 경로 확인, 설치
     - 시스템 등록정보 PATH 지정. GRADEL_HOME 사용
 
@@ -154,8 +157,149 @@ Java 개발자 과정 SpringBoot 리포지터리
 
 ## 4일차
 - 기초문법 마무리
-- Spring Boot 시작
+    - [JAVA기초문법](./JAVA_BASIC.md)
+    - 제네릭, 컬렉션 프레임워크, 입출력, 람다식, 스트림API
+
+- Gradle 오류 해결방법
+    - [Gradle](https://gradle.org/install/)
+    - C:\Gradle 위치에 압축해제
+    - sysdm.cpl 환경변수 GRADLE_HOME 경로 입력, 확인(JAVA_HOME과 동일)
+
+    <img src="./image/sb005.png" width="600">
+
+    - VS Code 설정
+    
+    <img src="./image/sb003.png" width="700">
+
+    - Gradle Build Server : Enabled 기본 on -> off
+
+    <img src="./image/sb004.png" width="700">
+
+    - Gradle Home -> 환경변수 입력한 GRADLE_HOME의 경로 입력
+    - Gradle Java Home -> 환경변수 JAVA_HOME의 경로 입력
+
+    - VS Code 재시작
 
 ## 5일차
+- Spring Boot 웹실행
+    - Spring Initializr : Create a Gradle Project
+    - Specify Spring Boot version : 3.4.4 선택
+    - Specify project language : Java
+    - Input Group ID : 본인 아이디 입력 (jm1109)
+    - Input Artifact ID : spring03
+    - Specify packaging type : Jar(Java archive, 압축파일)
+    - Specify Java version : 17
+    - Choose dependencied : Selected 1 dependencies
+        - Spring Web
+    - 저장위치 선택
+    - **새 창 열기** - Spring Boot 프로젝트가 루트폴더가 된 개발환경
+
+- 기본설정
+    - application.properties에 `spring.output.ansi.enabled=always` 추가
+
+- 포트번호
+    |프로토콜|포트번호|비고
+    |:---|---:|:---|
+    |HTTP|80|웹 서버, 서비스포트(보안취약)|
+    |HTTPS|443|SSL를 적용한 웹 서비스(보안강화)|
+    |FTP|21|웹을 통한 파일전송|
+    |SSH|22|보안강화된 텔넷|
+    |TELNET|23|원격서버접속 서비스|
+    |SMTP|25|메일 전송서비스|
+
+- 개발용 포트
+    - 포트는 중복안됨
+    - 8080포트를 사용하고 있으면 다른 포트로 변경해야 함
+    - 포트 변경시 application.properties에 `server.port=8090` 추가
+
+- 웹브라우저 열기
+    - http://localhost:8090/ 오픈
+
+    <img src="./image/sb006.png" width="700">
+
+- 접속위치 요청 처리
+    - 컨트롤러 생성
+        - HelloController 클래스 생성 (spring03 우클릭 > New Java File > Class)
+        - http://localhost:8090/hello
+
+    - 각 기능별로 패키지를 구분
+        - Controller, Model, 등...
+
+### 로그출력
+- log-back
+    - 스프링부트에 내장된 로그 모듈
+
+    - application.properties 내 로그성정
+
+    ```groovy
+    logging.level.root = info
+    logginf.file.name = /logtest.log
+    ```
+
+    - 사용시
+
+    ```java
+    // 클래스 내에 작성
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    // 메서드 내에 작성
+    logger.info("hello URL 오픈");
+    // 문제 발생시 로그를 남길떄
+    logger.debug("디버그시 필요한 로그입니다");
+    logger.trace("디버그시 필요한 로그예요");
+
+    logger.warn("경고표시를 나타내는 로그입니다");
+    logger.error("에러표시를 나타내는 로그입니다");
+    ```
+
+### 스프링부트 배너(중요도 없음)
+- resources 폴더에 banner.txt 생성
+- 내용 추가
+- [Spring Boot Banner Generator](https://devops.datenkollektiv.de/banner.txt/index.html)
+- 베너제너레이터로 생성한 글자 복사 banner.txt에 붙여넣기
+- 서버 재시작
+
+<img src="./image/sb007.png" width="700">
+
+### 메인페이지 추가
+- resources/static/index.html 부터 시작
+
+### 스트링부트 프로젝트 구조
+
+<img src="./image/sb008.png" width="300">
+
+- 각 폴더 구조
+    - .gradle ~ gradle : 그레이들, VSCode, 빌드 등에 필요한 폴더(설명필요X)
+    - `src/main/java` : 패키지와 자바 소스가 저장되는 위치
+    - com.jung1109.spring03 : 패키지. 폴더로 구성
+        - HelloController 클래스에 접근하려면
+        - com.jm1109.spring03.controller.HelloController 접근해야 함
+    - Spring03Applocation.java : 시작프로그램
+    - src/main/resources : 자바파일 이외 HTML, CSS, JS, 환경파일 등 리소스파일이 저장되는 위치
+        - `static` : CSS, JS, 이미지파일 저장되는 공간
+        - `templates` : 스프링부트와 연계되는 HTML 파일이 저장되는 곳
+        - `application.properties` : 프로젝트 환경설정 파일. 환경변수, DB 설정
+    - src/test/java : jUbit 스프링부트 테스트도구 자바파링 저장되는 위치
+    - `build.gradle` : 그레이들 환경 파일. Groovy 기반으로 한 빌드도구. dependencies만 잘 구성하면 됨
+    - gradlew.bat : 중간에 직접 그레이들 빌드를 할 때 사용하는 배치파일
+    - setting.gradle : 고급 그레이들 설정. 손댈일 없음
+
+### 스프링부트 어노테이션
+
+#### @SpringBootApplication
+- 스프링부트 자동구성 매커니즘 활성화
+- 어플리케이션 내 패키지에서 컴포넌트들 스캐닝
+- 설정 클래스 임포트해서 활성화, 스프링부트 실행
+
+#### @Controller
+- 컴포넌트 구체화해서 해당클래스 IoC컨테이너 Bean으로 등록
+
+#### @GetMapping
+- Get, Post 중 Get(url)으로 들어오는 주소를 매핑해서 처리해주는 역할
+- @PostMapping, @RequestMapping등 파악
+
+#### @ResponseBody
+- HTTP 요청의 자바객체가 처리한 body내용을 매핑하는 역할
+- 자바의 String 문자열을 웹페이지에 렌더링
 
 ## 6일차(06-26)

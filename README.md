@@ -303,3 +303,164 @@ Java 개발자 과정 SpringBoot 리포지터리
 - 자바의 String 문자열을 웹페이지에 렌더링
 
 ## 6일차(06-26)
+- Spring Boot JPA + Oracle + Thymeleaf + React
+    - JPA - DB설계 없이 엔티티 클래스만으로 테이블을 자동 생성해주는 기술. SQL도 필요없음
+        - JPA 이전 - MyBatis(iBatis), SQL + XML로 구성된 ORM(Object Relational Mapping) 기술
+    - H2 - Oracle, MySQL 등과 달리 인메모리DB. SpringBoot에서 자동으로 실행해주는 DB
+        - 개발할 때 사용. 운영시 이전할 때 DB 종류에 관계없이 이전 가능. 개발동안 사용
+    - Thymeleaf - JSP 단점을 보완한 템플릿 형태 FE 개발방식
+        - Bootstrap은 필수로 사용
+    - 소셜로그인 - 구글, 카카오, 네이버 SSO 로그인 연동 (OAuth 2.0)
+    - React - FE를 완전 분리
+
+- Spring Boot 프로젝트 생성
+    1. 명령 팔레트 시작 (Ctrl + Shift + P) : SpringInitializr: Create a Gradle (메이븐보다 속도 빠르고 크게 다른점 없음) Project
+    2. Spring Boot Version : 3.5.3
+    3. project language : Java
+    4. Group Id : com.pknu
+    5. Artifact Id : backboard
+    6. packaging type : Jar
+    7. Java Version : 17
+    8. Dependency
+        - Spring boot DevTools : 개발시 필요한 명령어, 기능 포함
+        - Lombok : 어노테이션 등 편리하게 해주는 플러그인 (Getter, Setter 자동생성?)
+        - Spring Web : 프론트엔드(html) 개발을 할 때 필요한 의존성
+        - Thymeleaf : html + Spring Boot 태그 매핑을 해주는 기능
+        - H2 Database(later) : 개발동안 필요한 인메모리 DB
+        - Oracle Driver(later) : 실제 운영할 DB
+        - Spring Data JAP(later) : DB 생성 + ORM
+    9. 저장위치 지정, Generate into this folder 선택
+    10. 오른쪽 하단 프로젝트폴더 Open 버튼 클릭
+
+- Spring Boot Backboard project (왼쪽에 ON 버튼 모양)
+    - Gradle plugin - Dependency 파악. 프로젝트 업데이트
+    - Spring Boot dashboard - 프로젝트 실행
+
+- Spring Boot 설정파일
+    - build.gradle - 그레이들에서 설정할 구성내용
+    - application.properties - Spring Boot 프로젝트 자체 설정파일
+    - settings.gradle, gradle-wrapper.properties - 손댈일 없음
+
+### 스프링부트 Backboard 프로젝트
+
+1. 기본 실행
+    1. resource/application.properties
+        ```properties
+        server.port=9097        # 포트변경
+        spring.output.ansi.enabled=always   # 로그 색상 설정
+
+        logging.level.root=info     # 로그 출력 레벨
+        logging.file.name=/backboard.log    # 로그 파일 위치
+        ```
+    2. build.gradle, Dependency
+        ```gradle
+        dependencies {
+            // 기본 설정 생략
+
+            // DB연동용 의존성
+            runtimeOnly 'com.h2database:h2' 	// 개발시에만 사용하는 InmemoryDB H2
+            implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.5.3'
+        }
+        ```
+
+    3. Controller 작업
+        - MainController 생성
+        - 새 파일로 생성 or Menu Java New file > class 둘 다 동일
+
+    4. /resources/templates/ 에 Mapping 메서드 리턴값과 동일한 html을 작성
+
+2. DB 연동
+    1. H2 DB 의존성 추가 (위에서 이미 해놨음)
+    2. application.properties에 H2 관련 설정 추가
+        ```properties
+        ## H2 DB 설정
+        spring.h2.console.enabled=true
+        # 접속 URL
+        spring.h2.console.path=/h2-console
+        # H2 DB 파일위치 : ~/ (user/Admin/ 에 생성) : ./ 현재 프로젝트 폴더에 생성
+        spring.datasource.url=jdbc:h2:./local
+        spring.datasource.driver-class-name=org.h2.Driver
+        spring.datasource.username=sa
+        spring.datasource.password=
+        ```
+    3. http://localhost:8100/h2-console 접속
+
+        <img src="./image/sb012.png" width="450">
+
+    4. application.properties에 JPA 설정
+    
+        ```properties
+        ## JPA DB 설정
+        spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect
+        spring.jpa.hibernate.ddl-auto=update
+        ```
+
+        - JPA등의 ORM 작업시 사용하는 기술 - 하이버네이트
+        - spring.jpa.hibernate.ddl-auto 종류
+            - create : SB 서버 시작시 테이블을 모두 삭제 후 재생성 (데이터모두 휘발)
+            - create-drop : create와 동일. 서버가 종료되면 테이블 모두 삭제
+            - `update` : 엔티티 변경부분만 적용. 원래 있던 데이터는 존재
+            - `validate` : 엔티티와 테이블간 차이점 검사만
+            - truncate : 데이터를 전부 날림
+            - none : 엔티티가 변경되어도 DB는 변경하지 않음
+
+    5. MVC 패턴에 맞춰 각 기능별로 패키지(폴더) 생성
+        - controller, entity, repository, service...
+
+    6. @(Annotation) 정리
+        - Lombok
+            - `@Getter` : getter 메서드 자동 생성
+            - `@Setter` : setter 메서드 자동 생성
+        - JPA
+            - `@Entity` : 테이블화 할 객체 선언
+            - @Id : 테이블 PK
+            - @GeneratedValue(strategy = GenerationType.SEQUENCE)
+                - AUTO : MySQL Auto Increment
+                - IDENTITY : SQLServer Identity(1, 1)
+                - SEQUENCE : Oracle Sequence
+                - H2 DB를 오라클 타입으로 사용하고, 나중에 운영DB를 오라클로 갈아타겠다
+            - @Column : 컬럼의 속성을 변경 (ex: @Column(name="subject", length = 250))
+                - name : DB상의 실제 컬럼명을 엔티티와 다르게 사용할 때
+                - length : 길이를 지정
+                - updatable : 최초 작성이후 수정여부. false는 수정불가
+                - columnDefinition : "TEXT" MySQL, "CLOB" Oracle. H2는 사용불가
+        - SpringFramework
+            - @CreatedDate : 생성일
+            - @LastModifiedDate : 최종수정일에 대한 어노테이션
+
+    7. entity 패키지(폴더) 작성
+        1. 테이블로 생성할 Board 클래스 생성
+        2. Lombok @Getter/@Setter를 사용하면 Get~, Set~ 메서드를 작성할 필요 없음
+
+    8. Repository 패키지(폴더) 작성
+        1. DB상의 데이터를 조회, 저장, 수정, 삭제할 수 있게 도와주는 인터페이스
+        2. SELECT -> findAll(), INSERT -> save() 메서드를 기본 제공
+        3. BoardRepository 인터페이스 생성
+
+    9. 단위테스트
+        1. build.gradle에 JUnit 의존성 추가
+
+            ```gradle
+            // JUnit 단위테스트
+	        tesetImplementation 'org.junit.jupiter:junit-jupiter'
+            ```
+
+        2. INSERT 단위테스트
+        3. test/../backboard/BackboardApplicationTests.java에 단위테스트 메서드 작성
+
+            <img src='./image/sb013.png' width="600">
+
+        4. SELECT, SELECT ... WHERE 단위테스트
+        5. 디버그콘솔에서 쿼리 로그로 확인. application.properties 설정추가
+
+            ```properties
+            # 테스트시 쿼리 확인
+            spring.jpa.properties.hibernate.format_sql=true
+            spring.jpa.properties.hibernate.show_sql=true
+            ```
+
+        6. SELECT ... WHERE LIKE, DELETE FROM 단위테스트
+
+## 7일차(07-01)
+
+### 스프링부트 Backboard 프로젝트(계속)

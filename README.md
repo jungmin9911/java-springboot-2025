@@ -518,3 +518,7 @@ Java 개발자 과정 SpringBoot 리포지터리
         ```
     2. 레이아웃 템플릿 페이지 작성
     3. board_list.html에 적용
+       
+       https://github.com/user-attachments/assets/684d2dd7-4aac-4989-8bdf-548e84ea736c
+
+

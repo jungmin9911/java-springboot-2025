@@ -1,9 +1,13 @@
 package com.pknu.backboard.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.pknu.backboard.entity.Board;
@@ -23,7 +27,13 @@ public class BoardService {
         return this.boardRepository.findAll();  // SELECT *
     }
 
-    // SELECT * FROM board WHERE bno?
+    // 페이징용 게시판 조회 메서드
+    public Page<Board> getBoardList(int page) {
+        Pageable pageable = PageRequest.of(page, 10);   // 10을 변경해서 한 페이지에 20, 30개도 표현가능
+        return this.boardRepository.findAll(pageable);
+    }
+
+    // SELECT * FROM board WHERE bno = ?
     public Board getBoardOne(Long bno) {
         Optional<Board> opBoard = this.boardRepository.findById(bno);
         if (opBoard.isPresent()) {
@@ -31,6 +41,15 @@ public class BoardService {
         } else {
             throw new RuntimeException("board not found");
         }
+    }
+
+    // INSERT INTO board VALUES ...
+    public void setBoardOne(String title, String content) {
+        Board board = new Board();
+        board.setTitle(title);  // 파라미터로 넘어온 변수를 파라미터로 입력
+        board.setContent(content);  // 내용(content) 부분도 동일
+        board.setCreateDate(LocalDateTime.now());
+        this.boardRepository.save(board);   // repository로... 넘기기?
     }
 
 }

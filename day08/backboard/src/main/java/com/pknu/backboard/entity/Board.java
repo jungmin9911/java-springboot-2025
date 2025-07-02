@@ -13,6 +13,8 @@ import lombok.*;
 @Getter
 @Setter // Lombok으로 Getter/Setter 자동화
 @Entity // JPA 테이블 매핑 선언
+@AllArgsConstructor     // 이거 있으면 this.컬럼명 이런거 안 써줘도됨
+@NoArgsConstructor
 public class Board {
     @Id     // PK
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

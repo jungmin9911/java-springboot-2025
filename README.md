@@ -547,10 +547,10 @@ Java 개발자 과정 SpringBoot 리포지터리
 
 2. Bootstrap 템플릿 사이트
     - https://startbootstrap.com/
-    - 
-    - 
-    - 
-    - 
+    - https://bootstrapmade.com/bootstrap-5-templates/
+    - https://mdbootstrap.com/freebies/
+    - https://bootstrapmade.com/
+    - https://www.youtube.com/@codehal (No Bootstrap)
 
 3. Bootstrap Navigation 구현
     - templates/layout.html 네비게이션 태그 작성
@@ -575,6 +575,51 @@ Java 개발자 과정 SpringBoot 리포지터리
 
 ### 스프링부트 Backboard 프로젝트(계속)
 
-1. Paging 구현 계속
-    1. 
+1. 게시판 작업
+    1. Paging 구현 계속
+        - 페이지수가 10개를 안 넘도록 처리
+        - 이전페이지, 다음페이지 사용여부 변경
+        - 맨 첫페이지, 마지막페이지 버튼 추가
 
+    2. 게시글 최신 글부터 나오도록 정렬
+        1. BoardService getVoardList() 메서드에 정렬로직 추가
+
+    3. 게시글 개수만큼 번호가 나오도록 수정
+        1. 현재는 각 페이지마자 1~10까지 반복
+        2. 게시물번호 = 전체 게시물개수 - (현재 페이지번호 * 10[페이지당 게시글 수]) - 페이지당 인덱스
+        3. board_list.html의 `<td th:text="${index.count}"></td>` 를 수정
+
+    4. Bootstrap 배지로 각 게시글마다 댓글개수 표시
+        - MyBatis로 작업된 Spring Boot : 쿼리변경, 도메인변경, html까지 세군데 수정
+        - JPA로 작업된 Spring Boot : html만 수정하면 끝
+        - board_list.html의 제목 태그에 추가
+
+        <img src="./image/sb016.png" width="600" height="350">
+
+2. Spring Boot Security : 회원가입, 로그인 등을 손쉽게 개발하도록 도와주는 의존성 라이브러리
+    1. 시큐리티 설치
+        ```gradle
+        // 스프링부트 시큐리티 의존성
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+        implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+        ```
+
+    2. 로그인 화면 및 H2 DB 사용불가
+        - 기본 사용자 : user
+        - 패스워드 : Spring Boot 로그에 표시 (ex: e2e2ba13-2e36-49b2-956f-c6739117e35b)
+
+    3. 스프링 시큐리티 설정
+        1. /security/SecurityConfig 클래스 생성
+
+    4. 웹 보안용어
+        - CORS : Cross-Origin Resource Sharing
+            - 기본적으로 서로 다른 오리진(웹서버)인 경우 리소스를 서로 사용할 수 없음
+        - CSRF : Cross-Site Request Forgery
+            - 명시적인 동의 없이 사용자를 대신해서 웹 앱이 악의적인 행동을 취하는 공격
+        
+    5. 스프링 시큐리티 설정 (계속)
+        1. SecurityConfig 클래스 내 filterChain 메서드에 CSRF 등 관련 설정 추기
+
+    6. 회원 엔티티 생성
+        1. Member 엔티티 클래스 생성
+        2. MemberRepository 인터페이스 생성

@@ -9,19 +9,25 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 public class Member {
 
-    @Id@GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long mno;
 
-    @Column(unique = true, nullable = false, length = 150)
+    @Column(unique = true, length = 150)
     private String username;    // 이메일로 사용
 
+    @Column(nullable = false)
     private String password;
 
-    @Column(unique = true, nullable = false, length = 150)
+    @Column(unique = true, length = 150)
     private String email;   // username과 동일하지만 일단 따로씀
 
     @CreatedDate

@@ -396,16 +396,17 @@ Java 개발자 과정 SpringBoot 리포지터리
         ```
 
         - JPA등의 ORM 작업시 사용하는 기술 - 하이버네이트
-        - spring.jpa.hibernate.ddl-auto 종류
-            - create : SB 서버 시작시 테이블을 모두 삭제 후 재생성 (데이터모두 휘발)
-            - create-drop : create와 동일. 서버가 종료되면 테이블 모두 삭제
-            - `update` : 엔티티 변경부분만 적용. 원래 있던 데이터는 존재
-            - `validate` : 엔티티와 테이블간 차이점 검사만
-            - truncate : 데이터를 전부 날림
-            - none : 엔티티가 변경되어도 DB는 변경하지 않음
+            - spring.jpa.hibernate.ddl-auto 종류
+                - create : SB 서버 시작시 테이블을 모두 삭제 후 재생성 (데이터모두 휘발)
+                - create-drop : create와 동일. 서버가 종료되면 테이블 모두 삭제
+                - `update` : 엔티티 변경부분만 적용. 원래 있던 데이터는 존재
+                - `validate` : 엔티티와 테이블간 차이점 검사만
+                - truncate : 데이터를 전부 날림
+                - none : 엔티티가 변경되어도 DB는 변경하지 않음
 
     5. MVC 패턴에 맞춰 각 기능별로 패키지(폴더) 생성
-        - controller, entity, repository, service...
+        -  entity, repository, service, controller...
+        - templates 내 html
 
     6. @(Annotation) 정리
         - Lombok
@@ -415,8 +416,8 @@ Java 개발자 과정 SpringBoot 리포지터리
             - `@Entity` : 테이블화 할 객체 선언
             - @Id : 테이블 PK
             - @GeneratedValue(strategy = GenerationType.SEQUENCE)
-                - AUTO : MySQL Auto Increment
-                - IDENTITY : SQLServer Identity(1, 1)
+                - AUTO : JPA가 자동 선별. 사용 지양
+                - IDENTITY : SQLServer Identity(1, 1), MySQL Auto-Increment
                 - SEQUENCE : Oracle Sequence
                 - H2 DB를 오라클 타입으로 사용하고, 나중에 운영DB를 오라클로 갈아타겠다
             - @Column : 컬럼의 속성을 변경 (ex: @Column(name="subject", length = 250))
@@ -623,3 +624,32 @@ Java 개발자 과정 SpringBoot 리포지터리
     6. 회원 엔티티 생성
         1. Member 엔티티 클래스 생성
         2. MemberRepository 인터페이스 생성
+        3. MemberService 클래스 생성
+        4. MemberForm 클래스 생성
+        5. MemberController 클래스 생성
+        6. templates/signup.html 작성
+
+    8. MainController에 URL / 관련 메서드 작업
+        - @GetMapping("/")
+
+    9. 중복회원 방지 처리
+        1. MemberRepository 커스텀 메서드 추가
+        2. MemberService 중복여부 체크 메서드 추가
+        3. MemberController, setSignUp 메서드 수정
+    
+    10. 회원 로그인
+        1. SecurityConfig 클래스에 로그인관련 filterChain 추가
+
+## 10일차
+
+### 스프링부트 Backboard 프로젝트(계속)
+
+2. Spring Boot Secutiry (계속)
+
+    1. 회원 로그인
+        1. Member Role
+        2. MemberSecurityService
+        3. signin.html
+        4. 회원 로그인 기능
+
+    2. 회원 로그아웃 기능

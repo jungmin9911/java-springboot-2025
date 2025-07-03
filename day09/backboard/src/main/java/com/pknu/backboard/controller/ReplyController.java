@@ -7,7 +7,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.pknu.backboard.entity.Board;
 import com.pknu.backboard.service.BoardService;
@@ -38,7 +37,7 @@ public class ReplyController {
         Board board = this.boardService.getBoardOne(bno);
         if (bindingResult.hasErrors()) {
             model.addAttribute("board", board);
-            return "board_detail";
+            return "board/board_detail";
         }
         this.replyService.setReply(board, replyForm.getContent());
         return String.format("redirect:/board/detail/%d", bno);

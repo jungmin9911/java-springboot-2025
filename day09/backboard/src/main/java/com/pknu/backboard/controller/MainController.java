@@ -13,5 +13,10 @@ public class MainController {
         log.info("/start 실행");    // 로그 출력
         return "start"; // resources/templates/start.html을 리턴해서 화면에 출력
     }
+
+    @GetMapping("/")
+    public String home() {
+        return "index";     // templates/index.html 생성
+    }
     
 }

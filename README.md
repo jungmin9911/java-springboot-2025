@@ -644,12 +644,208 @@ Java 개발자 과정 SpringBoot 리포지터리
 
 ### 스프링부트 Backboard 프로젝트(계속)
 
-2. Spring Boot Secutiry (계속)
-
+2. Spring Boot Security (계속)
     1. 회원 로그인
-        1. Member Role
-        2. MemberSecurityService
-        3. signin.html
-        4. 회원 로그인 기능
+        1. MemberRole enum : 스프링 시큐리티에서 역할분배(Admin, User)
+        2. MemberSecurityService : 스프링 시큐리티를 사용하는 로그인 서비스
+            - UserDetailsService 스프링 시큐리티 인터페이스를 구현
+        3. SecurityConfig 계정관련 메서드 추가
+        4. signin.html
+        5. MemberController 에 GetMapping 메서드 작업
 
-    2. 회원 로그아웃 기능
+    2. 로그인 오류 처리
+        1. SecurityConfig 클래스에 BCryptPasswordEncoder 생성메서드 추가
+        2. MemberService 의 setMember() 패스워드 인코딩시 사용변경
+      
+    3. 회원 로그아웃 기능
+        1. layout.html 네비게이션 메뉴 signin, signout 태그 분리
+        2. SecurityConfig 클래스 filterChain() 메서드 내 logout 관련 설정
+
+
+3. 개발용 H2 데이터베이스 -> Oracle로 이전
+    1. build.gradle 에 의존성 추가
+
+        ```gradle
+        runtimeOnly 'com.oracle.database.jdbc:ojdbc11'   // 운영용 Oracle         
+        ```
+    2. application.properties에 Oracle 연동관련 설정 추가
+        
+        ```properties
+        ## Oracle 설정
+        spring.datasource.url=jdbc:oracle:thin:@localhost:1521:XE
+        spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+        spring.datasource.username=madang
+        spring.datasource.password=madang
+
+        ## JPA DB 설정
+        # H2용
+        # spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect
+        spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.OracleDialect
+        ```
+
+4. 도커에 Oracle 21c XE 설치
+    - 11g 사용중 1521포트 사용 중인 상태에서 도커로 21c 설치
+
+        ```shell
+        > docker pull gvenzl/oracle-xe:21
+        ...
+        > docker run -d --name oracle-21-xe -p 11521:1521 -p 8989:8989 -e ORACLE_PASSWORD=oracle gvenzl/oracle-xe:21
+        ```
+
+    - Oracle 21 도커 터미널 접근. DB 생성
+
+        ```shell
+        > docker exec -it oracle-21-xe bash
+        bash-4.4$ sqlplus / as sysdba
+        SQL> create user backboard identified by 12345;      
+        User created.
+        SQL> grant connect, resource to backboard;
+        Grant succeeded.
+        SQL> alter user backboard QUOTA UNLIMITED ON USERS;
+        User altered.
+        ```
+
+5. DB 테이블 연동 작업
+    1. Board에 글쓴이 컬럼 추가
+        1. Board에 Member 클래스변수 추가
+        2. BoardService setBoardOne()에 사용자 Member 파라미터 추가
+        3. MemberService getMember() 메서드 추가
+        4. BoardController setCreate() 메서드 내 서비스 setBoardOne() 메서드에 Principle 추가 수정
+        5. 계정세션이 없는 상태에서 작성을 하면 예외발생 - BoardController 계정관련 어노테이션 `@PreAuthorize` 추가
+        6. SecurityConfig에 계정세션 접근권한 어노테이션 `@EnableMethodSecurity` 추가 
+        7. board_list.html 에 작성자 표시 태그 추가
+        8. board_detail.html 에 작성자 표시 태그 추가
+
+    2. Reply에 글쓴이 컬럼 추가
+        1. Reply에 Member 클래스 변수 추가
+        2. ReplyService에 사용자 Member 파라미터 추가
+        3. ReplyController setReply() Principle 추가
+        4. ReplyController @PreAuthorize 추가
+        5. board_detail.html 댓글부분에 계정관련 태그, 작성자 표시 태그 추가
+
+    3. Board 게시글 수정, 삭제 추가
+        1. board_detail.html 수정, 삭제 버튼 추가
+        2. BoardService에 게시글 수정메서드 putBoardOne(), 삭제메서드 deleteBoardOne() 추가
+        3. BoardController에 게시글 수정 GetMapping 메서드 추가
+        4. board_create.html th:action을 삭제, 등록과 수정을 동시에 처리할 수 있는 hidden태그를 작성
+        5. BoardController에 수정 PostMapping 메서드 추가
+
+
+
+https://github.com/user-attachments/assets/6c18f07c-a836-4d91-9f1c-8ff51d7b8fdb
+
+
+
+## 11일차
+
+### 스프링부트 Backboard 프로젝트(계속)
+
+1. VS Code 재설치시 삭제해야할 폴더
+    - VS Code 제거
+    - C:/Users/계정/.vscode : 플러그인 등 구성
+    - C:/Users/계정/AppData/Roaming/Code : 전체설정, 백업, 캐시 등 가장 큰 폴더
+    - VS Code 재설치
+
+2. DB 테이블 연동 작업 (계속)
+    1. board_detail.html 수정일자 표시
+    2. Board 게시글 삭제 추가
+        1. board_detail.html 삭제 버튼 추가
+        2. ~~BoardRepository에 삭제처리 로직 추가 필요없음~~
+        3. BoardService에 삭제처리 로직 추가
+        4. BoardController에 삭제처리 GetMapping 추가
+
+3. 댓글에 대한 수정, 삭제
+    - 게시판과 동일하게 작성하면 됨
+    
+4. 좋아요 기능 추가
+    1. Board Entity에 `Set<Member> like` 속성 추가    
+    2. board_detail.html 좋아요 버튼 추가
+    3. BoardService like 관련 메서드 추가
+    4. BoardController 에서 /board/like/{bno} GetMapping 추가
+    5. Reply Entity에 `Set<Member> like` 속성 추가
+    6. board_detail.html 댓글 부분에 좋아요 버튼 추가
+    7. ReplyService 답변가져오기 메서드 getReply() 추가
+    8. ReplyService like 관련 메서드 추가
+    9. ReplyController 에서 /reply/like/{rno} GetMapping 추가
+
+5. 커스텀 에러페이지 처리
+    1. application.properties 에서 Whitelabel Error 설정 해제
+    2. templates/error/500.html 생성
+    5. 템플릿 사이트
+        - https://freefrontend.com/html-404-templates/
+        - https://freefrontend.com/html-500-templates/
+
+6. 웹 html 에디터 적용
+    1. HTML 에디터 종류
+        - https://ckeditor.com/ckeditor-5/ : 전세계에서 가장 유명한 유무료 웹에디터
+        - https://alex-d.github.io/Trumbowyg/ : jQuery가 필요한 간단한 무료 웹에디터
+        - https://summernote.org/ : 정말 간단한 웹에디터
+        - https://simplemde.com/ : 마크다운만 사용하는 웹에디터
+    2. Trumbowyg 적용
+        1. jQuery CDN 적용
+        2. layout.html에 trumbowyg 관련 css, js 링크 추가
+        3. board_create.html에 content textarea와 관련된 스크립트 작성
+        4. 추가 플러그인 js 링크 추가
+    
+        <img src="./image/sb0017.png" width="600">
+
+7. 게시판 검색 기능 추가
+    1. `@Query` : DATA JPA Query annnotation, JPA 상에서 SQL쿼리와 유사한 방식으로 부가적인 기능을 만들고자할 때 사용. 표준 SQL이 아니라서 DBeaver, MySQL Workbench등에서 사용불가
+    2. BoardRepository 에 JPA Query 어노테이션 사용 메서드 추가
+    3. BoardService 에 getBoardList() 변경
+    4. BoardController 에 getList() 키워드 파라미터 추가
+    5. board_list.html 검색부분 추가
+
+## 12일차
+
+### 스프링부트 Backboard 프로젝트(계속)
+1. 현재 게시판 검색 중 발생 문제
+    - Board의 content 변수(테이블 컬럼), Column(length = 8000) 인 경우
+    - Oracle에서 컬럼 타입이 CLOB(Character Large OBject) 로 생성
+    - CLOB : 최대 2GB 텍스트 데이터 저장가능. 대용량 저장 가능
+    - 단, WHERE LIKE 문 사용불가
+    - Query annotation에서 `select distinct`를 사용하면 CLOB 컬럼 조회와 충돌발생
+    - 해결방법
+        1. Oracle Text : 검색용 인덱스를 추가 생성. JPA Native query로 CONTAINS() 함수 사용
+        2. ElasticSearch : 외부 서비스 사용해서 검색을 최적화. 도커에 엘라스틱서치 설치, 연동
+        3. 검색용 필드 추가 : VARCHAR(4000) 검색용 필드 content_search 컬럼 추가생성. content에서 html 태그 제거, 검색가능 단어만 저장하는 컬럼
+
+2. 게시판 검색 (계속)
+    1. BoardRepository findAllByKeyword의 `@Query` 를 편집. reply 제거, distinct 키워드 제거
+    2. 11일차 게시판 검색 기능 추가와 동일
+    3. board_list.html 검색부분, form 히든영역, javascript 추가
+
+3. 파일업로드
+    1. Board Entity에 파일업로드 관련 변수 -> 컬럼
+    2. BoardController 게시글 저장 메서드에 파일업로드 로직 추가
+    3. BoardService setBoardOne() 메서드 수정
+    4. application.properties 에 파일 업로드 위치 설정 -- TODO
+    5. board_create.html에 파일업로드 입력 + form 태그 enctype 속성 추가
+    6. board_detail.html에 파일다운로드 링크 추가
+    7. BoardController에 파일 다운로드 GetMapping 메서드 추가
+    8. 게시글 수정 시 업로드 관련 처리
+        - BoardForm 클래스에 파일업로드 관련 필드 추가 (entity에 있는 걸 form에도 넣어주기)
+    9. BoardController에 수정관련 GetMapping 메서드에 로직추가
+    10. BoardService putBoardOne() 메서드에 파일관련 파라미터 추가, 로직 수정
+    11. 파일업로드 사이드 설정 -- application.properties
+    12. 파일업로드시 파일명에 한글이 있으면 문제발생 - 한글을 UTF-8로 인코딩하여 저장해야함
+
+## 13일차
+
+### 스프링부트 Backboard 프로젝트(계속)
+
+1. 구글로그인
+    1. 
+
+9. 나중에 추가해야할 부분
+
+    1. [x] 회원가입 후 바로 로그인되는 기능
+    2. [x] 로그인한 사람 표시기능
+    3. [ ] 테마(라이트, 다크)
+    4. [x] 파일 업로드
+    5. [ ] 부트스트랩 프리테마로 변경
+    6. [ ] 파일사이즈 초과시 JS로 방지
+    7. [ ] 구글로그인
+    8. [ ] AWS 라이트세일 업로드
+    9. [ ] 게시글에 이미지 추가시 img 태그에 width="100%" 추가작업
+    

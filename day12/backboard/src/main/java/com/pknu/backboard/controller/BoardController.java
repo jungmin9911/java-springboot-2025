@@ -205,10 +205,10 @@ public class BoardController {
         Path path = Paths.get(uploadPath).resolve(filename);
         Resource resource = new UrlResource(path.toUri());  
 
-        // 파일명을 인코딩 후 다운
-        String encodedName = URLEncoder.encode(filename, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+        // 파일명을 인코딩후 다운로드
+        String encodedFileName = URLEncoder.encode(filename, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
         return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedName + "\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"")
                     .body(resource);
     }
 }

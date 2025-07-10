@@ -863,6 +863,37 @@ https://github.com/user-attachments/assets/6c18f07c-a836-4d91-9f1c-8ff51d7b8fdb
         3. templates/intro/about.html 생성
         4. 동일하게 페이지 옮기기
 
+## 14일차
+
+### 스프링부트 Backboard 프로젝트(계속)
+1. 부트스트링 프리테마 NiceSchool로 변경
+    1. 버튼 CSS 변경
+    2. `th:style="|background-image: url('@{/img/education/showcase-1.webp}')|">` 오류해결
+    3. About DB 연동
+        1. 전체 내용 Entity
+        2. 역사 리스트용 Entity
+        3. AboutRepository
+        4. AboutService
+        5. IntroController 수정
+        6. about.html 타임리프 연동
+
+    4. 관리자(사용자)가 쉽게 데이터를 입력할 수 있는 화면 개발
+        1. layout.html에 관리자 메뉴 추가
+        2. AdminController 생성 @GetMapping("/manage") 메서드 생성
+        3. /admin/manage.html을 board_detail.html 입력화면 작업
+        4. AdminController @PostMapping("/about") 메서드 생성
+        5. History 관련 리스트 및 입력화면 html 추가
+        6. AdminController @PostMappint("/history/{id}") 메서드 생성
+        7. HistoryRepository, HistoryService 생성 작성
+
+## 15일차
+
+### 스프링부트 Backboard 프로젝트(계속)
+1. 부트스트랩 프리테마 NiceSchool로 변경
+    1. 관리자 화면 history 수정 부분 완료
+
+2. AWS
+
 
 9. 나중에 추가해야할 부분
     1. [x] 회원가입 후 바로 로그인되는 기능

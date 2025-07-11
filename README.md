@@ -892,7 +892,8 @@ https://github.com/user-attachments/assets/6c18f07c-a836-4d91-9f1c-8ff51d7b8fdb
 1. 부트스트랩 프리테마 NiceSchool로 변경
     1. 관리자 화면 history 수정 부분 완료
 
-2. AWS
+2. AWS Lightsale로 업로드
+    1. Oracle DB 구축 -> H2
 
 
 9. 나중에 추가해야할 부분

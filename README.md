@@ -1024,15 +1024,21 @@ https://github.com/user-attachments/assets/6c18f07c-a836-4d91-9f1c-8ff51d7b8fdb
 ## 16일차
 
 ### 스프링부트 Backboard 프로젝트 (계속)
-
 1. 사용자 역할(Role) 추가
     1. Member Entity에 MemberRole 추가
-    2. MemberService setMember()에 컬럼값 입력 로직 추가
-    3. 권한이 
-    ```
-    ```
+    2. MemberService setMember() 에 컬럼값 입력 로직 추가
+    3. 권한이 필요한 페이지 컨트롤러 메서드에 preAuthorize 어노테이션 사용
+    4. MemberSecuritySerivce 에 로그인후 권한부여 로직 수정
 
-2. 소셜로그인 OAuth2(Google)
+        ```java
+        if (member.getRole().equals(MemberRole.ADMIN)) {        
+            authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue())); // ROLE_ADMIN
+        } else {
+            authorities.add(new SimpleGrantedAuthority(MemberRole.USER.getValue())); // ROLE_USER
+        }
+        ```
+
+2. 소셜로그인 OAuth2(Opne Authorization 2.0) 
     1. 의존성 추가
         ```gradle
         implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -1040,39 +1046,37 @@ https://github.com/user-attachments/assets/6c18f07c-a836-4d91-9f1c-8ff51d7b8fdb
     2. SecurityConfig에 oauth2Login 설정
     3. Google OAuth2 신청 : https://console.cloud.google.com/
         1. 새 프로젝트 : 프로젝트 이름, 결제 계정 옵션, 조직 없음 > 만들기
-        2. API 및 서비스
-            1. OAuth 동의화면
-            2. 시작하기
+        2. API 및 서비스 
+            1. OAuth 동의화면 
+            2. 시작하기 
             3. 앱 이름 입력, 사용자 지원 이메일 본인 메일 선택 > 다음
             4. 대상 외부 선택 > 다음
             5. OAuth 클라이언트 만들기 버튼 활성화
         3. OAuth 클라이언트 ID 만들기
-            1. 애플리케이션 유형 웹 애플리케이션 선택
+            1. 애플리케이션 유형 웹 애플리케이션 선택 
             2. 이름은 옵션
             3. `승인된 리디렉션 URI` : 제일 중요!!!
                 - +URI 추가버튼 클릭
                 - http://localhost:9097/login/oauth2/code/google
                 - 만들기 클릭
-            4. 데이터 엑세스
-                - 범위 추가 또는 삭제 클릭
-                - 
+            4. 데이터 액세스
+                - 범위 추가 또는 삭제 버튼 
+                - .../auth/userinfo.email, .../auth/userinfo.profile, openid 선택, 업데이트
                 - Save 버튼 클릭
-
-                ![alt text](image.png)
-
             5. Cloud 개요 > 대시보드 > API 개요 이동
                 - 사용자 인증정보
-                - 구글 클라이언트 ID 복사
+                - 구글 클라이언트ID 복사
                 - 클라이언트 보안 비밀번호 Add Secret, 복사
             6. 대상
                 - 테스트 사용자 등록
-                - 배포시 앱 게시를 눌러야함
+                - 배포시 앱 게시를 눌러야
 
         4. application.properties 구글 설정 추가
         5. CustomOAuth2UserService 클래스 작성 loadUser() 오버라이드메서드 작성
             - registrationid를 가져오는 부분까지 우선 작성
-        6. dto.OAuth2Response 인터페이스 생성
-        7. dto.GoogleResponse, NaverResponse 클래스를 따로 생성, 돌려받은 json의 구조가 다름
+        6. dto.OAuth2Reponse 인터페이스 생성
+        7. dto.GoogleResponse, NaverReponse 클래스를 따로 생성. 돌려받은 json의 구조가 다름
+
             ```json
             // 구글데이터 
             {
@@ -1096,15 +1100,99 @@ https://github.com/user-attachments/assets/6c18f07c-a836-4d91-9f1c-8ff51d7b8fdb
             }
             ```
         8. CustomOAuth2UserService 아래부분 완성
-        9. SecurityConfig에 CustomOAuth2UserService를 추가
-        10. 소셜로그인 버튼 추가
-        11. 
-        12. 
-        13. 
-        14. 
-        15. 
-        16. 
-        17. 
+        9. SecurityConfig에 CustomOAuth2UserService 를 추가
+        10. /member_signin.html에 소셜로그인 버튼 추가
+
+        11. Member Entity에 privder 추가        
+        12. CustomOAuth2UserService oAuth2Reponse 이후 Member저장로직 추가
+        13. dto.MemberDto 생성
+        14. CustomOAuth2UserService Member 저장로직 이후 로그인 세션에 넣을 객체생성
+        15. dto.CustomOAuth2User 클래스 생성
+        16. CustomOAuth2UserService MemberDto 리턴부분 추가
+        17. CustomOAuth2User에 UserDetails 인터페이스 추가, 구현안된 메서드 추가 구현
+
+## 17일차
+
+### 공공데이터 포털 OpenAPI 활용
+
+1. 새 프로젝트 생성
+    1. 명령 팔레트 (Ctrl + Shift + P)
+    2. Spring Initializr : Create a Gradle Project...
+        1. Spring Boot version : 3.5.3
+        2. Specify project language : Java
+        3. Group Id : com.pknu
+        4. Artifial Id : openapi_demo
+        5. Packaging : Jar
+        6. Java version : 17
+        7. Spring Web, Spring Boot DevTools, Lombok, Thymeleaf
+        8. 경로 선택, 프로젝트 오픈
+
+2. application.properties 초기설정
+    ```properties
+    spring.application.name=openapi_demo
+
+    ## 서버포트
+    server.port=9099
+
+    ## 로그색상 변경
+    spring.output.ansi.enabled=always
+
+    ## 서버 자동재시작
+    spring.devtools.restart.enabled=true
+    spring.devtools.livereload.enabled=true
+    spring.devtools.restart.additional-paths=src/main/java
+
+    ## 커스텀 에러 관련
+    # 기본 Whitelabel Error Page 비활성화
+    server.error.whitelabel.enabled=true
+    ```
+
+3. 공동 데이터 포털
+    1. 회원가입 및 로그인
+    2. [부산광역시 부산맛집정보](https://www.data.go.kr/data/15063472/openapi.do) 서비스 활용 신청
+
+        <img src="/image/sb019.png" width="700"> 
+
+    3. 마이페이지 > 데이터활용 > OpenAPI > 활용신청 현황
+    4. 개발계정 상세보기
+        - 일반 인증키(Encoding) 사용, 복사
+    5. 활용정보 > 상세기능 정보 > 원하는 서비스 미리보기 확인 클릭
+        - 서비스키 입력
+        - resultType 입력 후 미리보기 클릭
+    6. 미리보기
+
+        <img src="/image/sb020.png" width="600">
+
+4. OpenAPI 호출 로직 구현
+    1. 패키지 생성
+        1. controller : 사용자 요청 진입점. 많은 로직이 들어가지 않고 동작만 정의
+        2. dto : 서버내에서 사용할 데이터를 주고받을 때
+        3. entity : DB에 저장될 테이블 정의. 데이터 전달할 때
+        4. repository : JPA등 DB에 저장할 때 필요한 인터페이스
+        5. service : 동작할 로직이 정의되어있을 실제 일할 부분
+
+    2. controller.RestaurantController 생성
+        - 기본 요청 RESTfull URL GetMapping 메서드 생성
+
+    3. service.RestaurantService 생성 
+        - fetchRestaurant() 메서드 작성
+
+    4. build.gradle JSON용 라이브러리 의존성 추가
+        ```groovy
+        // JSON 파싱
+        implementation 'com.fasterxml.jackson.core:jackson-databind'
+        ```
+
+    5. JSON 결과
+        1. dto.Item 클래스
+        2. dto.FoodKrResponse 클래스
+    
+    6. service.RestaurantService
+        - JSON 파싱 완료, 리턴 로직 추가
+
+    7. PageNo 콤보박스 추가 페이징 처리
+
+    8. Bootstrap 디자인 접목
 
 9. 나중에 추가해야할 부분
     1. [x] 회원가입 후 바로 로그인되는 기능
@@ -1112,7 +1200,7 @@ https://github.com/user-attachments/assets/6c18f07c-a836-4d91-9f1c-8ff51d7b8fdb
     3. [x] 파일 업로드
     4. [x] 부트스트랩 프리테마 NiceSchool로 변경
     5. [ ] 파일사이즈 초과시 JS로 방지
-    6. [ ] 구글로그인
+    6. [x] 구글로그인
     7. [x] AWS 라이트세일 업로드
     8. [ ] 게시글에 이미지 추가시 img 태그에 width="100%" 추가작업
     9. [x] 사용자 정보에 Role 추가

@@ -1194,6 +1194,18 @@ https://github.com/user-attachments/assets/6c18f07c-a836-4d91-9f1c-8ff51d7b8fdb
 
     8. Bootstrap 디자인 접목
 
+5. RestAPI 서비스
+    1. controller.RestaurantRestController 생성
+
+6. DB 저장
+    1. build.gragle 의존성 추가
+        ```groovy
+        runtimeOnly 'com.oracle.database.jdbc:ojdbc11'   // 운영용 Oracle 
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        ```
+
+    2. 
+
 9. 나중에 추가해야할 부분
     1. [x] 회원가입 후 바로 로그인되는 기능
     2. [x] 로그인한 사람 표시기능

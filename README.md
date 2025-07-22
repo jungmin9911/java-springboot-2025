@@ -328,7 +328,7 @@ Java 개발자 과정 SpringBoot 리포지터리
         - Thymeleaf : html + Spring Boot 태그 매핑을 해주는 기능
         - H2 Database(later) : 개발동안 필요한 인메모리 DB
         - Oracle Driver(later) : 실제 운영할 DB
-        - Spring Data JAP(later) : DB 생성 + ORM
+        - Spring Data JPA(later) : DB 생성 + ORM
     9. 저장위치 지정, Generate into this folder 선택
     10. 오른쪽 하단 프로젝트폴더 Open 버튼 클릭
 

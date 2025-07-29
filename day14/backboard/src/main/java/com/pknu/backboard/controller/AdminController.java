@@ -1,5 +1,6 @@
 package com.pknu.backboard.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 
 import org.springframework.stereotype.Controller;
@@ -35,7 +36,8 @@ public class AdminController {
     }
 
     @PostMapping("/about")
-    public String postAbout(About about, Principal principal) {
+    public String postAbout(About about, Principal principal) throws IOException {
+        
         About orignAbout = aboutService.getAbout();
 
         orignAbout.setTitle(about.getTitle());
